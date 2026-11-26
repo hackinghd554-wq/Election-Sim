@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Election Night Desk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><b>Election Night Desk</b><span id="brandSub">Playtest build</span></div>
+    <div class="ctl" role="group" aria-label="Playback">
+      <button class="btn on" id="bPlay" type="button">Pause</button>
+      <button class="btn" id="b1" type="button" data-sp="1">1&times;</button>
+      <button class="btn" id="b2" type="button" data-sp="2">2&times;</button>
+      <button class="btn" id="b4" type="button" data-sp="4">4&times;</button>
+      <button class="btn" id="bEnd" type="button">Skip to 2:00 AM</button>
+      <button class="btn" id="bFinal" type="button">Skip to final count</button>
+      <button class="btn" id="bNew" type="button">Main menu</button>
+      <button class="btn gold" id="bMine" type="button" hidden>Your race</button>
+    </div>
+    <div class="clock"><b id="clk">6:30 PM</b><span id="clkSub">Eastern time &middot; 10-minute night</span></div>
+    <div class="timeline" id="tl" aria-hidden="true"><div class="tl-track"></div><div class="tl-fill" id="tlFill"></div></div>
+  </header>
+
+  <nav class="tabs" role="tablist" id="tabs" aria-label="Races"></nav>
+  <div class="headline" id="headline"><span class="lab">DESK</span><span class="txt" id="hlTxt">Polls open. Waiting for the first close.</span><span class="tm" id="hlTm"></span></div>
+  <div id="wrapSlot"></div>
+
+  <div class="main">
+    <section>
+      <div class="card mapcard">
+        <div class="mapbar"><button type="button" class="btn sm on" id="mapGeo">Map</button><button type="button" class="btn sm" id="mapTiles">Equal-size tiles</button></div>
+        <svg id="map" viewBox="0 0 704 520" role="group" aria-label="State map"></svg>
+        <div class="legend" id="legend"></div>
+        <div class="waffle" id="waffle" hidden></div>
+        <div class="pollview" id="pollView" hidden></div>
+      </div>
+    </section>
+    <aside class="side">
+      <div class="card" id="score"></div>
+      <div class="card"><h3 id="keyTitle">Key races</h3><div id="key"></div></div>
+      <div class="card"><h3>Newsroom feed</h3><div class="feed" id="feed"></div></div>
+    </aside>
+  </div>
+</div>
+
+<div class="drawer" id="drawer" aria-hidden="true"><div class="dpanel" id="dpanel" role="dialog" aria-modal="true" aria-label="Race detail"></div></div>
+
+<div class="overlay" id="gm" hidden></div>
+
+<div class="overlay" id="intro">
+  <div class="intro">
+    <div class="brand"><b>Election Night Desk</b><span>Playtest build</span></div>
+    <section class="mp" data-p="main">
+      <h1>Run for office.<br>Watch the vote come in.</h1>
+      <p>Build a candidate, pick a real race, and plan the weeks before the vote. Then watch the count come in county by county on election night.</p>
+      <div class="menu">
+        <button class="mbtn pri" id="goCamp" type="button"><b>Run a campaign</b><span>Create a candidate and run in the 2026 midterms or a 2028 election.</span></button>
+        <button class="mbtn" id="toNight" type="button"><b>Watch an election night</b><span>Sit at the desk with no campaign: polls close, votes come in, races get called.</span></button>
+        <button class="mbtn" id="toHow" type="button"><b>How it works</b><span>What is real, what is simulated, and how the game plays.</span></button>
+      </div>
+      <p class="small pt">This is a playtest. Progress is not saved, so refreshing the page returns you to this menu. Anything confusing, broken or unfair is worth noting for feedback.</p>
+    </section>
+    <section class="mp" data-p="night" hidden>
+      <h1>Election night</h1>
+      <div class="fld"><span class="lb">Night</span>
+        <div class="seg" id="scenSeg">
+          <button type="button" data-v="2028" aria-pressed="true"><b>2028 presidential</b><span>President, Senate, House, governors</span></button>
+          <button type="button" data-v="2026" aria-pressed="false"><b>2026 midterms</b><span>Senate, House, governors</span></button>
+        </div>
+      </div>
+      <div class="fld" style="max-width:420px"><label for="env">National environment</label>
+        <select id="env"><option value="-15">R+15 shift (historic landslide)</option><option value="-10">R+10 shift (landslide)</option><option value="-7">R+7 shift (wave)</option><option value="-4">R+4 shift</option><option value="-2">R+2 shift</option><option value="0" selected>Neutral</option><option value="2">D+2 shift</option><option value="4">D+4 shift</option><option value="7">D+7 shift (wave)</option><option value="10">D+10 shift (landslide)</option><option value="15">D+15 shift (historic landslide)</option></select></div>
+      <p class="small">Polls close across six time zones on a 10-minute clock. Some states report nearly everything within hours, others take days. Early, mail and Election Day votes arrive in different orders.</p>
+      <div class="gorow"><button class="start" id="go" type="button">Start election night</button><button class="start alt" data-menu="main" type="button">Back</button></div>
+    </section>
+    <section class="mp" data-p="how" hidden>
+      <h1>How it works</h1>
+      <ul class="notes how">
+        <li><b>Campaign.</b> Build a candidate, then take a short political test whose answers become your platform. Pick a race and run it week by week: choose your message, where you campaign, which voters you court, how you spend your days and money. Media and social tabs show how the story is going. The result plays out on election night.</li>
+        <li><b>Election night.</b> Votes are counted county by county with realistic reporting patterns. A call desk projects winners only when a race is out of reach. The national mood sets the tide; candidates move individual races, usually by a point or two.</li>
+        <li><b>Real data.</b> Baseline margins use real 2024 presidential results and 2026 results as of Nov 25, 2026 (unofficial). County outlines are real. Counties in 18 states use real 2026 returns; others use 2024 county results. Candidate names for 2026 come from public sources and may contain errors. House names are nominees, and independents appear only as "other".</li>
+        <li><b>Simulated.</b> Polls, news outlets, social platforms and storylines are simulated. Outlets and platforms are fictional; storylines marked "Real" follow actual 2026 events. Poll closing times, counting speed and each candidate's hidden traits are modeled. 2028 is hypothetical.</li>
+        <li><b>Known limits.</b> Independents cannot win on election night. House districts have no outline map. Connecticut, Rhode Island, Alaska and DC report by town or district, so they show boxes instead of county shapes. Balance is still rough.</li>
+      </ul>
+      <div class="gorow"><button class="start alt" data-menu="main" type="button">Back</button></div>
+    </section>
+  </div>
+</div>
+
+<!-- Script order matters: the files share one global scope. tools/bundle.py and tests/ read this list. -->
+<script src="js/version.js"></script>
+<script src="data/baseline.js"></script>
+<script src="data/geo.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/game-data.js"></script>
+<script src="js/quiz-text.js"></script>
+<script src="js/hidden.js"></script>
+<script src="data/candidates.js"></script>
+<script src="js/media.js"></script>
+<script src="js/game.js"></script>
+<script src="js/oct.js"></script>
+<script src="js/strategy.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game-ui.js"></script>
+</body>
+</html>

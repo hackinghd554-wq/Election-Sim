@@ -1,0 +1,13 @@
+{
+  "name": "election-night-desk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "US electoral simulator: run a campaign, then watch the count come in.",
+  "scripts": {
+    "test": "node tests/sim.js",
+    "smoke": "node tests/smoke.js",
+    "bundle": "python3 tools/bundle.py",
+    "bundle:artifact": "python3 tools/bundle.py --artifact"
+  },
+  "devDependencies": { "playwright": "^1.48.0" }
+}
